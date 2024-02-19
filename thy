@@ -29,9 +29,16 @@ Sub CountMessagesBetweenDates()
     
     ' Loop through each item in the folder
     For Each MailItem In Items
-        ' Check if the item is a mail item and falls within the specified date range
-        If TypeOf MailItem Is Outlook.MailItem And MailItem.ReceivedTime >= StartDate And MailItem.ReceivedTime <= EndDate Then
-            Count = Count + 1 ' Increment count if within the date range
+        ' Check if the item is a mail item
+        If TypeOf MailItem Is Outlook.MailItem Then
+            ' Get the received date of the mail item
+            Dim ReceivedDate As Date
+            ReceivedDate = MailItem.ReceivedTime
+            
+            ' Check if the received date falls within the specified date range
+            If ReceivedDate >= StartDate And ReceivedDate <= EndDate Then
+                Count = Count + 1 ' Increment count if within the date range
+            End If
         End If
     Next MailItem
     
