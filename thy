@@ -1,14 +1,16 @@
-Sub CountTHYMessages()
+Sub CountMessagesBetweenDates()
     Dim OutlookApp As Object
     Dim Namespace As Object
     Dim Folder As Object
     Dim Items As Object
     Dim MailItem As Object
-    Dim SubjectKeyword As String
+    Dim StartDate As Date
+    Dim EndDate As Date
     Dim Count As Integer
     
-    ' Define the keyword to search for in the subject
-    SubjectKeyword = "THY"
+    ' Prompt the user for start and end dates
+    StartDate = InputBox("Enter the start date (format: mm/dd/yyyy)")
+    EndDate = InputBox("Enter the end date (format: mm/dd/yyyy)")
     
     ' Create a new instance of Outlook application
     Set OutlookApp = CreateObject("Outlook.Application")
@@ -16,25 +18,25 @@ Sub CountTHYMessages()
     ' Get the MAPI namespace
     Set Namespace = OutlookApp.GetNamespace("MAPI")
     
-    ' Get the inbox folder
-    Set Folder = Namespace.GetDefaultFolder(6) ' 6 represents the Inbox folder
+    ' Set the folder to your desired folder by name
+    Set Folder = Namespace.GetDefaultFolder(6) ' Change if using a different folder
     
-    ' Get all items in the inbox
+    ' Get all items in the specified folder
     Set Items = Folder.Items
     
     ' Initialize count
     Count = 0
     
-    ' Loop through each item in the inbox
+    ' Loop through each item in the folder
     For Each MailItem In Items
-        ' Check if the item is a mail item and subject contains the keyword
-        If TypeOf MailItem Is Outlook.MailItem And InStr(1, MailItem.Subject, SubjectKeyword, vbTextCompare) > 0 Then
-            Count = Count + 1 ' Increment count if subject contains the keyword
+        ' Check if the item is a mail item and falls within the specified date range
+        If TypeOf MailItem Is Outlook.MailItem And MailItem.ReceivedTime >= StartDate And MailItem.ReceivedTime <= EndDate Then
+            Count = Count + 1 ' Increment count if within the date range
         End If
     Next MailItem
     
     ' Display the count
-    MsgBox "Number of messages with subject containing 'THY': " & Count
+    MsgBox "Number of messages received between " & StartDate & " and " & EndDate & ": " & Count
     
     ' Clean up
     Set OutlookApp = Nothing
