@@ -1,0 +1,42 @@
+Sub ExportQueryToExcel()
+    Dim db As DAO.Database
+    Dim qdf As DAO.QueryDef
+    Dim rst As DAO.Recordset
+    Dim xlApp As Object
+    Dim xlWorkbook As Object
+    Dim xlWorksheet As Object
+    Dim i As Integer
+    
+    ' Open the current database
+    Set db = CurrentDb()
+    
+    ' Set the query definition
+    Set qdf = db.QueryDefs("YourQueryName")
+    
+    ' Execute the query
+    Set rst = qdf.OpenRecordset()
+    
+    ' Create a new instance of Excel
+    Set xlApp = CreateObject("Excel.Application")
+    xlApp.Visible = True
+    
+    ' Create a new workbook
+    Set xlWorkbook = xlApp.Workbooks.Add
+    
+    ' Create a new worksheet
+    Set xlWorksheet = xlWorkbook.Worksheets(1)
+    
+    ' Write field names to the first row
+    For i = 0 To rst.Fields.Count - 1
+        xlWorksheet.Cells(1, i + 1).Value = rst.Fields(i).Name
+    Next i
+    
+    ' Write query results to Excel
+    xlWorksheet.Range("A2").CopyFromRecordset rst
+    
+    ' Release objects
+    rst.Close
+    Set rst = Nothing
+    Set qdf = Nothing
+    Set db = Nothing
+End Sub
