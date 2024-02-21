@@ -1,0 +1,18 @@
+$folderPath = "C:\path\to\a"
+$extension = "*.xls"
+
+# Get all files with .xls extension in the folder
+$filePaths = Get-ChildItem -Path $folderPath -Filter $extension
+
+foreach ($filePath in $filePaths) {
+    # Get the last modified date of the file
+    $lastModifiedDate = $filePath.LastWriteTime
+    $currentTime = Get-Date
+
+    # Calculate the time difference
+    $timeDifference = $currentTime - $lastModifiedDate
+
+    if ($timeDifference.TotalHours -gt 48) {
+        Write-Host "File $($filePath.Name) in folder $folderPath was modified more than 48 hours ago."
+    }
+}
