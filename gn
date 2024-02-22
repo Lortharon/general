@@ -1,0 +1,17 @@
+Sub SortColumnI()
+
+    Dim ws As Worksheet
+    Dim lastRow As Long
+
+    ' Set the worksheet where your data is located
+    Set ws = ThisWorkbook.Worksheets("Sheet1") ' Change "Sheet1" to your sheet's name
+
+    ' Find the last row with data in column I
+    lastRow = ws.Cells(ws.Rows.Count, "I").End(xlUp).Row
+
+    ' Sort column I from largest to smallest
+    With ws.Range("I2:I" & lastRow)
+        .Sort Key1:=.Cells(1, 1), Order1:=xlDescending, Header:=xlYes
+    End With
+
+End Sub
