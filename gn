@@ -1,17 +1,15 @@
 Sub SortColumnI()
-
     Dim ws As Worksheet
-    Dim lastRow As Long
+    Dim rng As Range
 
-    ' Set the worksheet where your data is located
-    Set ws = ThisWorkbook.Worksheets("Sheet1") ' Change "Sheet1" to your sheet's name
+    ' Assuming your data is in Sheet1, adjust as needed
+    Set ws = ThisWorkbook.Sheets("Sheet1")
 
-    ' Find the last row with data in column I
-    lastRow = ws.Cells(ws.Rows.Count, "I").End(xlUp).Row
+    ' Assuming your data starts from row 2 and column I, adjust as needed
+    Set rng = ws.Range("I2:I" & ws.Cells(ws.Rows.Count, "I").End(xlUp).Row)
 
-    ' Sort column I from largest to smallest
-    With ws.Range("I2:I" & lastRow)
-        .Sort Key1:=.Cells(1, 1), Order1:=xlDescending, Header:=xlYes
+    ' Sort the range based on values in column I
+    With rng
+        .Sort Key1:=rng, Order1:=xlAscending, Header:=xlYes
     End With
-
 End Sub
