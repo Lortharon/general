@@ -1,0 +1,78 @@
+function Main {
+    Write-Host "Welcome to My PowerShell CLI App" -ForegroundColor Cyan
+    Write-Host "Choose an option:"
+    Write-Host "1. Copy Files"
+    Write-Host "2. Check Files"
+    Write-Host "3. Exit"
+
+    $choice = Read-Host "Enter your choice"
+
+    switch ($choice) {
+        1 {
+            CopyFiles
+            Main
+            break
+        }
+        2 {
+            CheckFiles
+            Main
+            break
+        }
+        3 {
+            Write-Host "Exiting the program..." -ForegroundColor Green
+            break
+        }
+        default {
+            Write-Host "Invalid choice. Please enter a valid option." -ForegroundColor Red
+            Main
+            break
+        }
+    }
+}
+
+function CopyFiles {
+    $sourcePath = Read-Host "Enter source directory path:"
+    $destinationPath = Read-Host "Enter destination directory path:"
+
+    if (-not (Test-Path $sourcePath)) {
+        Write-Host "Source directory does not exist." -ForegroundColor Red
+        return
+    }
+
+    if (-not (Test-Path $destinationPath)) {
+        Write-Host "Destination directory does not exist. Creating directory..." -ForegroundColor Yellow
+        New-Item -Path $destinationPath -ItemType Directory | Out-Null
+    }
+
+    $files = Get-ChildItem -Path $sourcePath
+
+    foreach ($file in $files) {
+        $destinationFile = Join-Path -Path $destinationPath -ChildPath $file.Name
+        Copy-Item -Path $file.FullName -Destination $destinationFile -Force
+        Write-Host "File $($file.Name) copied to $($destinationPath)" -ForegroundColor Green
+    }
+
+    Write-Host "Files copied successfully." -ForegroundColor Green
+}
+
+function CheckFiles {
+    $path = Read-Host "Enter directory path to check files:"
+
+    if (-not (Test-Path $path)) {
+        Write-Host "Directory does not exist." -ForegroundColor Red
+        return
+    }
+
+    $files = Get-ChildItem -Path $path
+
+    if ($files.Count -eq 0) {
+        Write-Host "No files found in $($path)." -ForegroundColor Yellow
+    } else {
+        Write-Host "Files found in $($path):" -ForegroundColor Cyan
+        foreach ($file in $files) {
+            Write-Host $file.FullName -ForegroundColor White
+        }
+    }
+}
+
+Main
